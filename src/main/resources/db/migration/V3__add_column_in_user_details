@@ -1,0 +1,2 @@
+ALTER TABLE user_details
+ADD COLUMN email_id varchar(100) NULL;

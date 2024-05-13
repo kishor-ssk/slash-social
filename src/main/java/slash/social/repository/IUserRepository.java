@@ -5,7 +5,7 @@ import slash.social.entity.UserEntity;
 
 public interface IUserRepository extends JpaRepository<UserEntity,Long> {
 
-    UserEntity findByPhoneNumber(String phoneNumber);
+    UserEntity findByEmailId(String emailId);
 
     UserEntity findByPassword(String password);
 }

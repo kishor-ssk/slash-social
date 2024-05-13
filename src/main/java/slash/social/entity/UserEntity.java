@@ -19,11 +19,8 @@ public class UserEntity {
     @Column(name="user_id")
     private Long userId;
 
-    @Column(name="user_name")
-    private String userName;
-
-    @Column(name="phone_number")
-    private String phoneNumber;
+    @Column(name="email_id")
+    private String emailId;
 
     @Column(name="password")
     private String password;

@@ -14,34 +14,34 @@ public class UserService {
     private IUserRepository iUserRepository;
 
     @Transactional
-    public Boolean saveUserDetails(String name, String phoneNumber, String password) {
-        if(isInputValid(name,phoneNumber,password)){
-            UserEntity userEntity=new UserEntity();
-            userEntity.setUserName(name);
-            userEntity.setPhoneNumber(phoneNumber);
+    public Boolean saveUserDetails(String emailId, String password) {
+        if (isInputValid(emailId, password)) {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setEmailId(emailId);
             userEntity.setPassword(password);
             return true;
         }
         return false;
     }
 
-    public Boolean isDetailsValid(String phoneNumber, String password) {
-        UserEntity byPhoneNumber = iUserRepository.findByPhoneNumber(phoneNumber);
+    public Boolean isDetailsValid(String emailId, String password) {
+        UserEntity byEmailId = iUserRepository.findByEmailId(emailId);
         UserEntity byPassword = iUserRepository.findByPassword(password);
-        if((byPhoneNumber != null) && (byPassword != null)){
+        if ((byEmailId != null) && (byPassword != null)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    private boolean isInputValid(String name, String phoneNumber, String password) {
-        if (name.trim().isEmpty() || !name.replaceAll("\\s", "").matches("[a-zA-Z]+")) {
+    private boolean isInputValid(String emailId, String password) {
+        if (emailId == "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}") {
+            return true;
+        }
+        if (password == "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$") {
+            return true;
+        } else {
             return false;
         }
-        if (!phoneNumber.matches("\\d+") || phoneNumber.length() != 10) {
-            return false;
-        }
-        return true;
     }
 }
