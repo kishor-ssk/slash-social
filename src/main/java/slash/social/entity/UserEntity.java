@@ -25,4 +25,16 @@ public class UserEntity {
     @Column(name="password")
     private String password;
 
+    @Column(name="name")
+    private String name;
+
+    @Column(name="dateofbirth")
+    private String dateOfBirth;
+
+    @Column(name="phonenumber")
+    private String phoneNumber;
+
+    @Column(name="gender")
+    private String gender;
+
 }

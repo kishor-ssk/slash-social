@@ -8,4 +8,7 @@ public interface IUserRepository extends JpaRepository<UserEntity,Long> {
     UserEntity findByEmailId(String emailId);
 
     UserEntity findByPassword(String password);
+
+    UserEntity findByUserId(Long userId);
+
 }

@@ -7,27 +7,31 @@ import slash.social.entity.UserEntity;
 import slash.social.repository.IUserRepository;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class UserService {
+
+    private static final List<String> GENDERS = Arrays.asList("male", "female");
     @Autowired
     private IUserRepository iUserRepository;
 
     @Transactional
-    public Boolean saveUserDetails(String emailId, String password) {
+    public String newUser(String emailId, String password) {
         if (isInputValid(emailId, password)) {
             UserEntity userEntity = new UserEntity();
             userEntity.setEmailId(emailId);
             userEntity.setPassword(password);
-            return true;
+            iUserRepository.save(userEntity);
+            return "details are saved";
         }
-        return false;
+        return "not saved";
     }
 
-    public Boolean isDetailsValid(String emailId, String password) {
+    public Boolean userValid(String emailId, String password) {
         UserEntity byEmailId = iUserRepository.findByEmailId(emailId);
-        UserEntity byPassword = iUserRepository.findByPassword(password);
-        if ((byEmailId != null) && (byPassword != null)) {
+        if(byEmailId.getPassword().equals(password)) {
             return true;
         } else {
             return false;
@@ -35,12 +39,33 @@ public class UserService {
     }
 
     private boolean isInputValid(String emailId, String password) {
-        if (emailId == "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}") {
+        return true;
+    }
+
+    private boolean isDetailsValid(String name, String dateOfBirth, String phoneNumber, String gender){
+        if (!GENDERS.contains(gender)){
+            return false;
+        }
+        if (name.trim().isEmpty() || !name.replaceAll("\\s", "").matches("[a-zA-Z]+")) {
+            return false;
+        }
+        if (!phoneNumber.matches("\\d+") || phoneNumber.length() != 10) {
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean userDetails(Long userId, String name, String dateOfBirth, String phoneNumber, String gender) {
+        UserEntity byUserId = iUserRepository.findByUserId(userId);
+        if(userId != null){
+            byUserId.setName(name);
+            byUserId.setDateOfBirth(dateOfBirth);
+            byUserId.setPhoneNumber(phoneNumber);
+            byUserId.setGender(gender);
+            iUserRepository.save(byUserId);
             return true;
         }
-        if (password == "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$") {
-            return true;
-        } else {
+        else{
             return false;
         }
     }
