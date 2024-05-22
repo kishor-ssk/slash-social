@@ -15,12 +15,13 @@ import lombok.Setter;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_details_generator")
+    @SequenceGenerator(name="user_details_generator", sequenceName = "user_details_user_id_seq", allocationSize=1)
     @Column(name="user_id")
     private Long userId;
 
-    @Column(name="email_id")
-    private String emailId;
+    @Column(name="email")
+    private String email;
 
     @Column(name="password")
     private String password;

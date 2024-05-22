@@ -18,10 +18,10 @@ public class UserService {
     private IUserRepository iUserRepository;
 
     @Transactional
-    public String newUser(String emailId, String password) {
-        if (isInputValid(emailId, password)) {
+    public String newUser(String email, String password) {
+        if (isInputValid(email, password)) {
             UserEntity userEntity = new UserEntity();
-            userEntity.setEmailId(emailId);
+            userEntity.setEmail(email);
             userEntity.setPassword(password);
             iUserRepository.save(userEntity);
             return "details are saved";
@@ -29,9 +29,9 @@ public class UserService {
         return "not saved";
     }
 
-    public Boolean userValid(String emailId, String password) {
-        UserEntity byEmailId = iUserRepository.findByEmailId(emailId);
-        if(byEmailId.getPassword().equals(password)) {
+    public Boolean userValid(String email, String password) {
+        UserEntity byEmail = iUserRepository.findByEmail(email);
+        if(byEmail.getPassword().equals(password)) {
             return true;
         } else {
             return false;

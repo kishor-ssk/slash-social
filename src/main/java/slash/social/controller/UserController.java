@@ -17,9 +17,9 @@ public class UserController {
     public UserService userService;
 
     @PostMapping("/new/user")
-    public ResponseEntity<String> newUser(@RequestParam("emailid") String emailId,
+    public ResponseEntity<String> newUser(@RequestParam("email") String email,
                                                    @RequestParam("password") String password) {
-        return new ResponseEntity<String>(userService.newUser(emailId.trim(), password.trim()), HttpStatus.OK);
+        return new ResponseEntity<String>(userService.newUser(email.trim(), password.trim()), HttpStatus.OK);
     }
 
     @GetMapping("/user/details/valid")
