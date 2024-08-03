@@ -9,5 +9,4 @@ public class SlashSocialApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SlashSocialApplication.class, args);
 	}
-
 }
