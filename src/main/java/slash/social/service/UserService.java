@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import slash.social.configuration.TwilioConfiguration;
+import org.springframework.web.client.RestTemplate;
+//import slash.social.configuration.TwilioConfiguration;
 import slash.social.entity.UserEntity;
 import slash.social.repository.IUserRepository;
 import slash.social.repository.SmsRequest;
@@ -23,6 +24,12 @@ import java.util.logging.Logger;
 public class UserService {
 
     private static final List<String> GENDERS = Arrays.asList("male", "female");
+
+    private final RestTemplate restTemplate;
+
+    public UserService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
     @Autowired
     private IUserRepository iUserRepository;
     @Autowired
@@ -91,36 +98,42 @@ public class UserService {
         return true;
     }
 
-    @Service("twilio")
-    public class TwilioSmsSender implements SmsSender {
+//    @Service("twilio")
+//    public class TwilioSmsSender implements SmsSender {
+//
+//        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(TwilioSmsSender.class);
+//        private final TwilioConfiguration twilioConfiguration;
+//
+//        @Autowired
+//        public TwilioSmsSender(TwilioConfiguration twilioConfiguration) {
+//            this.twilioConfiguration = twilioConfiguration;
+//        }
 
-        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(TwilioSmsSender.class);
-        private final TwilioConfiguration twilioConfiguration;
+//        @Override
+//        public void sendSms(SmsRequest smsRequest) {
+//            if (isPhoneNumberValid(smsRequest.getPhoneNumber())) {
+//                PhoneNumber to = new PhoneNumber(smsRequest.getPhoneNumber());
+//                PhoneNumber from = new PhoneNumber(twilioConfiguration.getTrialNumber());
+//                String message = smsRequest.getMessage();
+//                MessageCreator creator = Message.creator(
+//                        to,
+//                        from,
+//                        message);
+//                creator.create();
+//                LOGGER.info("Send sms");
+//            } else{
+//                throw new IllegalArgumentException("phno no");
+//            }
+//        }
+//
+//        private boolean isPhoneNumberValid(String phoneNumber) {
+//            return true;
+//        }
+//    }
 
-        @Autowired
-        public TwilioSmsSender(TwilioConfiguration twilioConfiguration) {
-            this.twilioConfiguration = twilioConfiguration;
-        }
-
-        @Override
-        public void sendSms(SmsRequest smsRequest) {
-            if (isPhoneNumberValid(smsRequest.getPhoneNumber())) {
-                PhoneNumber to = new PhoneNumber(smsRequest.getPhoneNumber());
-                PhoneNumber from = new PhoneNumber(twilioConfiguration.getTrialNumber());
-                String message = smsRequest.getMessage();
-                MessageCreator creator = Message.creator(
-                        to,
-                        from,
-                        message);
-                creator.create();
-                LOGGER.info("Send sms");
-            } else{
-                throw new IllegalArgumentException("phno no");
-            }
-        }
-
-        private boolean isPhoneNumberValid(String phoneNumber) {
-            return true;
-        }
+    public String userPincode(String pincode){
+        String url = "https://api.example.com/location?pincode=" + pincode;
+        LocationResponse response = restTemplate.getForObject(url, LocationResponse.class);
+        return response != null ? response.getLocation(): "NOT FOUND";
     }
 }

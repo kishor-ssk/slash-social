@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import slash.social.repository.SmsRequest;
-import slash.social.service.Service;
+//import slash.social.service.Service;
 import slash.social.service.UserService;
 
 @CrossOrigin
@@ -17,11 +17,11 @@ public class UserController {
     @Autowired
     public UserService userService;
 
-    private final Service service;
-
-    public UserController(Service service) {
-        this.service = service;
-    }
+//    private final Service service;
+//
+//    public UserController(Service service) {
+//        this.service = service;
+//    }
 
     @PostMapping("/new/user")
     public ResponseEntity<String> newUser(@RequestParam("email") String email,
@@ -50,8 +50,13 @@ public class UserController {
         return new ResponseEntity<Boolean>(userService.userEmail(fromEmailId, toEmailId), HttpStatus.OK);
     }
 
-    @PostMapping("user/sent/phno")
-    public void sendSms(@RequestBody SmsRequest smsRequest) {
-        service.sendSms(smsRequest);
+//    @PostMapping("user/sent/phno")
+//    public void sendSms(@RequestBody SmsRequest smsRequest) {
+//        service.sendSms(smsRequest);
+//    }
+
+    @GetMapping("user/pincode")
+    public ResponseEntity<String> userPincode(@RequestParam("pincode") String pincode) {
+        return new ResponseEntity<String>(userService.userPincode( pincode), HttpStatus.OK);
     }
 }
