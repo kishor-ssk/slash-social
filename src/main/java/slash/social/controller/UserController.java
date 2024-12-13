@@ -16,16 +16,24 @@ public class UserController {
     @Autowired
     public UserService userService;
 
-    @PostMapping("/user/save")
-    public ResponseEntity<Boolean> saveUserDetails(@RequestParam("name") String name,
-                                                   @RequestParam("phonenumber") String phoneNumber,
+    @PostMapping("/new/user")
+    public ResponseEntity<String> newUser(@RequestParam("email") String email,
                                                    @RequestParam("password") String password) {
-        return new ResponseEntity<Boolean>(userService.saveUserDetails(name.toLowerCase(), phoneNumber, password.trim()), HttpStatus.OK);
+        return new ResponseEntity<String>(userService.newUser(email.trim(), password.trim()), HttpStatus.OK);
     }
 
     @GetMapping("/user/details/valid")
-    public ResponseEntity<Boolean> isDetailsValid(@RequestParam("phonenumber") String phoneNumber,
-                                                   @RequestParam("password") String password ) {
-        return new ResponseEntity<Boolean>(userService.isDetailsValid(phoneNumber, password), HttpStatus.OK);
+    public ResponseEntity<Boolean> userValid(@RequestParam("emailid") String phoneNumber,
+                                                   @RequestParam("password") String emailId ) {
+        return new ResponseEntity<Boolean>(userService.userValid(phoneNumber, emailId), HttpStatus.OK);
+    }
+
+    @GetMapping("/user/details")
+    public ResponseEntity<Boolean> userDetails(@RequestParam("userid") Long userId,
+                                               @RequestParam("name") String name,
+                                                  @RequestParam("dateofbirth") String dateOfBirth,
+                                               @RequestParam("phonenumber") String phoneNumber,
+                                               @RequestParam("gender") String gender) {
+        return new ResponseEntity<Boolean>(userService.userDetails(userId, name.toLowerCase(), dateOfBirth, phoneNumber, gender.toLowerCase()), HttpStatus.OK);
     }
 }

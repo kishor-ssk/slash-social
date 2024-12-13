@@ -7,35 +7,45 @@ import slash.social.entity.UserEntity;
 import slash.social.repository.IUserRepository;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class UserService {
+
+    private static final List<String> GENDERS = Arrays.asList("male", "female");
     @Autowired
     private IUserRepository iUserRepository;
 
     @Transactional
-    public Boolean saveUserDetails(String name, String phoneNumber, String password) {
-        if(isInputValid(name,phoneNumber,password)){
-            UserEntity userEntity=new UserEntity();
-            userEntity.setUserName(name);
-            userEntity.setPhoneNumber(phoneNumber);
+    public String newUser(String email, String password) {
+        if (isInputValid(email, password)) {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setEmail(email);
             userEntity.setPassword(password);
-            return true;
+            iUserRepository.save(userEntity);
+            return "details are saved";
         }
-        return false;
+        return "not saved";
     }
 
-    public Boolean isDetailsValid(String phoneNumber, String password) {
-        UserEntity byPhoneNumber = iUserRepository.findByPhoneNumber(phoneNumber);
-        UserEntity byPassword = iUserRepository.findByPassword(password);
-        if((byPhoneNumber != null) && (byPassword != null)){
+    public Boolean userValid(String email, String password) {
+        UserEntity byEmail = iUserRepository.findByEmail(email);
+        if(byEmail.getPassword().equals(password)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    private boolean isInputValid(String name, String phoneNumber, String password) {
+    private boolean isInputValid(String emailId, String password) {
+        return true;
+    }
+
+    private boolean isDetailsValid(String name, String dateOfBirth, String phoneNumber, String gender){
+        if (!GENDERS.contains(gender)){
+            return false;
+        }
         if (name.trim().isEmpty() || !name.replaceAll("\\s", "").matches("[a-zA-Z]+")) {
             return false;
         }
@@ -43,5 +53,20 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    public Boolean userDetails(Long userId, String name, String dateOfBirth, String phoneNumber, String gender) {
+        UserEntity byUserId = iUserRepository.findByUserId(userId);
+        if(userId != null){
+            byUserId.setName(name);
+            byUserId.setDateOfBirth(dateOfBirth);
+            byUserId.setPhoneNumber(phoneNumber);
+            byUserId.setGender(gender);
+            iUserRepository.save(byUserId);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
